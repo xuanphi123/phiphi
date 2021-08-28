@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Xuân Phi</title>
+    <style>
+        * {
+            margin: 1920;
+            padding: 1080;
+        }
+        body {
+            background: url(bg.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+    </style>
+</head>
+<body>
+
+     <audio width="200" height="200" controls autoplay>
+         <source src="hh.mp3" type="audio/mp3">
+          
+     </audio> 
+
+
+<canvas id="snowField"></canvas>
+
+<script>
+var canvas = document.querySelector('#snowField');
+var ctx = canvas.getContext('2d');
+
+canvas.width = 1300;
+canvas.height = 600;
+
+var totalSnow = 100;
+
+function Snow() {
+    this.x = Math.round(Math.random() * canvas.width);
+    this.y = Math.round(Math.random() * canvas.height);
+    this.r = Math.random() * 4 + 1;
+    this.d = Math.random() * totalSnow;
+    this.a = Math.random() * 5;
+}
+
+Snow.prototype.update = function () {
+
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.closePath();
+
+    this.x += Math.sin(this.a) / 4;
+    this.y += Math.random() * 1 + 1;
+    // this.y += Math.cos(this.a + this.d) + 1 + this.r/2;
+    if(this.x > canvas.width || this.x < 0) {
+        this.x = Math.random() * canvas.width;
+    }
+    if(this.y > canvas.height) {
+        this.y = 0;
+    }
+    this.a += 0.01;
+    // console.log(this.x + ' ' + this.y);
+};
+
+var snows = [];
+var imgTree = new Image();
+imgTree.src = 'tree.png';
+var imgLight = new Image();
+imgLight.src = 'light.png';
+var imgHai = new Image();
+imgHai.src = 'hai.png';
+function draw() {
+    console.log(imgTree.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(imgTree, 500, 129, 650, 500);
+   
+    ctx.drawImage(imgLight, canvas.width - imgLight.width/3, 0, imgLight.width/4, imgLight.height/4);
+    // ctx.fontFamily = 'Segoe UI, sans-serif';
+    ctx.font = '48px Segoe UI, sans-serif';
+    ctx.fillText('VUI TẾT TRUNG THU', 500, 500, 250);
+    ctx.fillText('Xuân Phi', 590, 550, 70);
+    ctx.drawImage(imgHai, 10, 200, 450, 400);
+    
+    for(var i = 0; i < snows.length; i++) {
+        snows[i].update();
+    }
+
+    requestAnimationFrame(draw);
+}
+
+
+window.onload = function () {
+    for(var i = 0; i < totalSnow; ++i) {
+        var _snow = new Snow();
+
+        snows.push(_snow);
+    }
+    console.log(snows);
+
+    draw();
+};  
+</script>
+    
+</body>
+</html>
